@@ -13,7 +13,7 @@ NULL
 #' G(0)
 #' G(1)
 #' G(.1)
-#' 
+#'
 #' @export
 G <- function(r = 0) {
     stopifnot(is.numeric(r), length(r) == 1L, !is.na(r), r >= 0, r <= 1)
@@ -22,7 +22,7 @@ G <- function(r = 0) {
 
 #' @describeIn Inheritance Create initial, approximately isoplethic,
 #'     genotype frequencies in standard form.
-#' @param n missing or integer(1). When missing, return genotype
+#' @param N missing or integer(1). When missing, return genotype
 #'     frequencies in populations at approximate isoplethic
 #'     equilibirum. Otherwise, return a sample of size \code{n} drawn
 #'     from a poualation at approximate isoplethy.
@@ -32,17 +32,21 @@ G <- function(r = 0) {
 #' isoplethy()      # approximate isoplethy
 #' isoplethy(100)  # sample from isoplethic population
 #' @export
-isoplethy <- function(n) {
+isoplethy <- function(N) {
     gtype <- setNames(
         c(0.333, 0.309, 0.024, 0.122, 0.122, 0.045, 0.045, 0, 0,
           0),
         c("sm/sm", "sM/sm", "sM/sM", "Sm/sm", "SM/sm", "Sm/sM",
           "SM/sM", "Sm/Sm", "SM/Sm", "SM/SM"))
     gtype <- as_genotype(gtype)
-    if (!missing(n))
-        gtype <- rmultinom(1, n, gtype)[,1]
+    if (!missing(N))
+        gtype <- .sample(gtype, N)
     gtype
 }
+
+
+.sample <- function(gtype, N)
+    rmultinom(1L, N, gtype)[,1]
 
 .stopifnot_is_single_integer <- function(n) {
     stopifnot(is.numeric(n), length(n) == 1L, !is.na(n))
@@ -68,6 +72,10 @@ isoplethy <- function(n) {
 #' @export
 as_genotype <- function(gtype) {
     .stopifnot_is_gtype(gtype)
+    .as_genotype(gtype)
+}
+
+.as_genotype <- function(gtype) {
     ## place frequencies in standard form
     result <- setNames(numeric(nrow(genetics)), genetics$Genotype)
     result[names(gtype)] <- gtype
@@ -100,5 +108,5 @@ gamete_frequency_by_morph <- function(gtype, G) {
 
 .gamete_frequency_by_morph <- function(gtype, G) {
     gametes <- .gamete_frequency(gtype, G)
-    as.matrix(rowsum(gametes, genetics$Morph))
-}    
+    rowsum(gametes, genetics$Morph, reorder=FALSE)
+}

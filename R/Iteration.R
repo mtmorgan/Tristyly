@@ -19,14 +19,18 @@ NULL
 iterate <-
     function(population, generations, G = Tristyly::G(), M = Tristyly::M())
 {
+    .stopifnot_is_gtype(population)
     stopifnot(
         is.numeric(generations), length(generations) == 1L, !is.na(generations),
         generations > 0L)
 
+    N <- sum(population)
+
     result <- numeric(3L * generations)
     result[1:3] <- morph_frequency(population)
     for (i in seq_len(generations - 1L)) {
-        population <- mate(population, G, M)
+        gtype <- .mate(.as_genotype(population), G, M)
+        population <- .sample(gtype, N)
         result[i * 3L + 1:3] <- morph_frequency(population)
         if (sum(population != 0) == 1L) {
             idx <- seq(i * 3L + 1L, generations * 3L)
@@ -38,7 +42,7 @@ iterate <-
     tibble(
         Generation=rep(seq_len(generations), each=3),
         Morph=factor(
-            rep(names(morph_frequency(population)), generations),
+            rep(levels(genetics$Morph), generations),
             levels=levels(genetics$Morph)),
         Frequecy=result)
 }       
@@ -101,13 +105,14 @@ iterate_to_dimorphism <-
         is.numeric(progress.interval), length(progress.interval) == 1L,
         !is.na(progress.interval), progress.interval > 0L)
 
+    N <- sum(population)
     generation <- integer(times)
     morph <- vector("list", times)
     for (i in seq_len(times)) {
         if ((i %% progress.interval) == 0L)
             message(i)
 
-        result <- .iterate1_to_morphism(population, n_morphs, G, M)
+        result <- .iterate1_to_morphism(population, n_morphs, N, G, M)
 
         generation[i] <- result$Iteration
         morph[[i]] <- morph_frequency(result$Population)
@@ -116,13 +121,14 @@ iterate_to_dimorphism <-
     list(Generation=generation, Morph=morph)
 }
 
-.iterate1_to_morphism <- function(population, n_morphs, G, M) {
+.iterate1_to_morphism <- function(population, n_morphs, N, G, M) {
     iteration <- 0L
     repeat {
         iteration <- iteration + 1L
-        if (sum(morph_frequency(population) != 0) <= n_morphs)
+        if (sum(.morph_frequency(population) != 0) <= n_morphs)
             break
-        population <- mate(population, G, M)
+        gtype <- .mate(.as_genotype(population), G, M)
+        population <- .sample(gtype, N)
     }
     list(Iteration=iteration, Population=population)
 }

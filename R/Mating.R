@@ -23,7 +23,7 @@ NULL
                 Cannonical=factor(
                     as.vector(cannonical),
                     levels=genetics$Genotype),
-                xstringsAsFactors=FALSE)
+                stringsAsFactors=FALSE)
         }
         value
     }
@@ -78,40 +78,36 @@ morph_frequency <- function(population) {
 #' @importFrom stats rmultinom setNames
 #' @export
 mate <- function(population, G = Tristyly::G(), M = Tristyly::M()) {
+    .stopifnot_is_gtype(population)
     stopifnot(
-        ## population is checked in call to .mate
         identical(dimnames(G), dimnames(G0)),
         identical(dimnames(M), dimnames(Tristyly::M())))
-    expected_frequency <- .mate(population, G, M)
-    obs <- rmultinom(1L, sum(population), expected_frequency)
-    setNames(as.vector(obs), rownames(obs))
+    gtype <- .mate(as_genotype(population), G, M)
+    .sample(gtype, sum(population))
 }
 
 .mate <- function(gtype, G, M) {
     ## FIXME: incorporate female fertility differences
-    gamete_freq <- gamete_frequency_by_morph(gtype, G)
+    gamete_freq <- .gamete_frequency_by_morph(gtype, G)
     morph_freq <- rowSums(gamete_freq)
 
-    result <- NULL
-    for (morph in names(morph_freq)) {
+    exp <- NULL
+    for (morph in names(morph_freq)[morph_freq != 0]) {
         female <- gamete_freq[morph,]
-        n <- sum(female)
-        if (!n)
-            next
-        female <- female / n
+        female <- female / sum(female)
 
-        male <- colSums(gamete_freq * M[morph,])
-        n <- sum(male)
-        if (!n)
+        male_freq <- morph_freq * M[morph,]
+        male <- colSums(gamete_freq * male_freq)
+        male <- male / sum(male)
+        if (!all(is.finite(male)))
             next
-        male <- male / n
 
         offspring <- morph_freq[morph] * outer(female, male)
-        if (is.null(result))
-            result <- offspring
-        else result <- result + offspring
+        if (is.null(exp))
+            exp <- offspring
+        else exp <- exp + offspring
     }
 
     ## collapse to cannonical form, ignoring sex of parent
-    vapply(split(result, .cannonical_gtype()$Cannonical), sum, numeric(1))
+    vapply(split(exp, .cannonical_gtype()$Cannonical), sum, numeric(1))
 }
