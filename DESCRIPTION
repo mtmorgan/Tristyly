@@ -1,0 +1,21 @@
+Package: Tristyly
+Title: Stochastic Simulation of Tristylous Genentic Polymorphisms
+Version: 0.0.1
+Authors@R: c(
+    person("Martin", "Morgan",
+        email = "Martin.Morgan@RoswellPark.org",
+        role = c("aut", "cre")))
+Description: Tristyly is a plant polymorhism in which there are three
+    floral 'morphs': Long (long stigma, mid and short anthers), Mid
+    (mid stigma, long and short anthers), and Short (short stigma,
+    long and mid anthers). The genetics of many systems is
+    well-understood, typically involving two epistatic loci with
+    dominance, such that the ssmm genotype is Long, ssM- is Mid, and
+    S--- is Short. Mating is dissasortative between morphs, e.g., Long
+    mates with Mid and Short more frequently than random. The package
+    implements these features to allow simulation of morph ration
+    dynamics in finite populations.
+Depends: R (>= 3.4.0)
+License: Artistic-2.0
+Encoding: UTF-8
+LazyData: true

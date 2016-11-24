@@ -1,0 +1,12 @@
+---
+title: "`r packageDescription('Tristyly')[['Title']]`"
+author: "`r packageDescription('Tristyly')[['Author']]`"
+date: "Updated: 2016-11-24; Processed: `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+vignette: >
+  % \VignetteIndexEntry{Stochastic Simulation of Tristyly Genentic Polymorphism}
+  % \VignetteEngine{knitr::rmarkdown}
+---
+
