@@ -3,14 +3,17 @@
 \name{Inheritance}
 \alias{Inheritance}
 \alias{G}
-\alias{gtype_init}
+\alias{isoplethy}
+\alias{as_genotype}
 \alias{gamete_frequency}
 \alias{gamete_frequency_by_morph}
 \title{Inheritance}
 \usage{
 G(r = 0)
 
-gtype_init(gtype)
+isoplethy(n)
+
+as_genotype(gtype)
 
 gamete_frequency(gtype, G)
 
@@ -19,6 +22,11 @@ gamete_frequency_by_morph(gtype, G)
 \arguments{
 \item{r}{numeric(1) recombination rate, between 0 (complete
 linkage) and 1 (free recombination).}
+
+\item{n}{missing or integer(1). When missing, return genotype
+frequencies in populations at approximate isoplethic
+equilibirum. Otherwise, return a sample of size \code{n} drawn
+from a poualation at approximate isoplethy.}
 
 \item{gtype}{named numeric() vector of genotype frequencies. The
 vector must have at least one positive value; it cannot contain
@@ -47,7 +55,10 @@ Inheritance
 by each genotype, allowing for arbitrary recombination between
 the S and M loci.
 
-\item \code{gtype_init}: Create initial genotype frequencies in
+\item \code{isoplethy}: Create initial, approximately isoplethic,
+genotype frequencies in standard form.
+
+\item \code{as_genotype}: Create a vector of genotype frequencies in
 standard form.
 
 \item \code{gamete_frequency}: Calculate gamete freqencies from current
@@ -62,7 +73,7 @@ G(0)
 G(1)
 G(.1)
 
-gtype_init()    # approximate isoplethy
-gtype_init(c(`sm/sm`=100, `sM/sm`=70, `sM/sM`=20, `Sm/sm`=50))
+isoplethy()      # approximate isoplethy
+isoplethy(100)  # sample from isoplethic population
 }
 

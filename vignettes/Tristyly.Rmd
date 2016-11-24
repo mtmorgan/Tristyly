@@ -21,47 +21,38 @@ suppressPackageStartupMessages({
 ## Genetics
 
 The genetics are summarized by the relationship between genotypes and
-the gametes produced. The data object `G0` represents gametes produced
-in the absence of recombination between loci, `G1` the gametes
-produced in the presence of free recombination.
-
-```{r genetics}
-library(Tristyly)
-genetics
-G0          # complete linkage
-G1          # free recombination
-```
-
-Arbitrary recombination between loci occurs at rate `r`, with gamete
-frequencies summaried by the function `G()`:
+the gametes produced. Arbitrary recombination between loci occurs at
+rate `r`, with gamete frequencies summaried by the function `G()`:
 
 ```{r recombination}
-G <- G(0.1)     # e.g., recombination between loci = 0.1
+G <- G(0.1)            # e.g., recombination between loci = 0.1
 ```
 
-Initial genotype frequencies are given by a vector `gtype`, e.g.,
+Approximately isoplethic genotype frequencies are given by
+`isoplethy()`; using an optional argument `n` creates a sample of size
+`n` from an isoplethic population.
 
 ```{r gtype-1}
-gtype <- gtype_init()    # approximate isoplethy
-gtype
+isoplethy()
+isoplethy(100)
 ```
 
-Inputs do not have to be frequencies
+Arbitrary starting vectors are possible using `as_genotype()`
 
 ```{r gtype-2}
-gtype_init(c("sm/sm"=100, "sM/sm"=70, "sM/sM"=20, "Sm/sm"=50))
+as_genotype(c("sm/sm"=100, "sM/sm"=70, "sM/sM"=20, "Sm/sm"=50))
 ```
 
 Gamete frequencies prior to mating at the genotype level are
 
 ```{r gamete}
-gamete_frequency(gtype, G)
+gamete_frequency(isoplethy(), G)
 ```
 
 and at the morph level
 
 ```{r gamete-morph}
-gamete_frequency_by_morph(gtype, G)
+gamete_frequency_by_morph(isoplethy(), G)
 ```
 
 ## Mating

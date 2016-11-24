@@ -49,12 +49,12 @@ M <- function() {
 
 #' @describeIn Mating Summarize population morph frequencies.
 #' @param population A numeric() vector of genotype counts, in the
-#'     same form as returned by \code{gtype_init()}, but with
+#'     same form as returned by \code{isoplethy()}, but with
 #'     \code{sum(population)} the size of the population.
 #' @return named numeric(3) vector of morph frequencies
 #' @export
 morph_frequency <- function(population) {
-    gtype <- gtype_init(population)
+    gtype <- as_genotype(population)
     .morph_frequency(gtype)
 }
 
@@ -70,8 +70,7 @@ morph_frequency <- function(population) {
 #' @param M See \code{M()}.
 #' @return numeric() vector of sampled genotypes.
 #' @examples
-#' gtype <- gtype_init()
-#' n <- setNames(as.integer(gtype * 1000), names(gtype))
+#' n <- isoplethy(1000)
 #' morph_frequency(n)
 #' n1 <- mate(n)
 #' n1

@@ -20,7 +20,44 @@ G <- function(r = 0) {
     (1 - r) * G0 + r * G1
 }
 
-#' @describeIn Inheritance Create initial genotype frequencies in
+#' @describeIn Inheritance Create initial, approximately isoplethic,
+#'     genotype frequencies in standard form.
+#' @param n missing or integer(1). When missing, return genotype
+#'     frequencies in populations at approximate isoplethic
+#'     equilibirum. Otherwise, return a sample of size \code{n} drawn
+#'     from a poualation at approximate isoplethy.
+#' @return A vector of genotype frequencies (i.e., non-negative values
+#'     summing to 1)
+#' @examples
+#' isoplethy()      # approximate isoplethy
+#' isoplethy(100)  # sample from isoplethic population
+#' @export
+isoplethy <- function(n) {
+    gtype <- setNames(
+        c(0.333, 0.309, 0.024, 0.122, 0.122, 0.045, 0.045, 0, 0,
+          0),
+        c("sm/sm", "sM/sm", "sM/sM", "Sm/sm", "SM/sm", "Sm/sM",
+          "SM/sM", "Sm/Sm", "SM/Sm", "SM/SM"))
+    gtype <- as_genotype(gtype)
+    if (!missing(n))
+        gtype <- rmultinom(1, n, gtype)[,1]
+    gtype
+}
+
+.stopifnot_is_single_integer <- function(n) {
+    stopifnot(is.numeric(n), length(n) == 1L, !is.na(n))
+}
+
+.stopifnot_is_gtype <- function(gtype) {
+    stopifnot(
+        is.numeric(gtype), length(gtype) != 0, !anyNA(gtype),
+        !is.null(names(gtype)), !anyDuplicated(names(gtype)),
+        all(names(gtype) %in% genetics$Genotype),
+        all(gtype >= 0),
+        sum(gtype) > 0)
+}
+
+#' @describeIn Inheritance Create a vector of genotype frequencies in
 #'     standard form.
 #' @param gtype named numeric() vector of genotype frequencies. The
 #'     vector must have at least one positive value; it cannot contain
@@ -28,31 +65,9 @@ G <- function(r = 0) {
 #'     column of the \code{genetics} data object; names cannot be
 #'     duplicated. If missing, genotypes are set to approximate
 #'     isoplethy under complete disassortative mating.
-#' @return A vector of genotype frequencies (i.e., non-negative values
-#'     summing to 1)
-#' @examples
-#' gtype_init()    # approximate isoplethy
-#' gtype_init(c(`sm/sm`=100, `sM/sm`=70, `sM/sM`=20, `Sm/sm`=50))
 #' @export
-gtype_init <- function(gtype) {
-    if (missing(gtype)) {
-        ## Approximate isoplethy
-        gtype <- setNames(
-            c(0.333, 0.309, 0.024, 0.122, 0.122, 0.045, 0.045, 0, 0,
-              0),
-            c("sm/sm", "sM/sm", "sM/sM", "Sm/sm", "SM/sm", "Sm/sM",
-              "SM/sM", "Sm/Sm", "SM/Sm", "SM/SM"))
-    }
-    stopifnot(
-        is.numeric(gtype), length(gtype) != 0, !anyNA(gtype),
-        !is.null(names(gtype)), !anyDuplicated(names(gtype)),
-        all(names(gtype) %in% genetics$Genotype),
-        all(gtype >= 0),
-        sum(gtype) > 0)
-    .gtype_frequency(gtype)
-}
-
-.gtype_frequency <- function(gtype) {
+as_genotype <- function(gtype) {
+    .stopifnot_is_gtype(gtype)
     ## place frequencies in standard form
     result <- setNames(numeric(nrow(genetics)), genetics$Genotype)
     result[names(gtype)] <- gtype
@@ -66,7 +81,7 @@ gtype_init <- function(gtype) {
 #' @return numeric() matrix of genotype x gamete expected frequencies
 #' @export
 gamete_frequency <- function(gtype, G) {
-    gtype <- gtype_init(gtype)
+    gtype <- as_genotype(gtype)
     .gamete_frequency(gtype, G)
 }
 
@@ -79,7 +94,7 @@ gamete_frequency <- function(gtype, G) {
 #' @return numeric() matrix of morph x gamete expected frequencies.
 #' @export
 gamete_frequency_by_morph <- function(gtype, G) {
-    gtype <- gtype_init(gtype)
+    gtype <- as_genotype(gtype)
     .gamete_frequency_by_morph(gtype, G)
 }
 

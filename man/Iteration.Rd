@@ -50,10 +50,8 @@ monomorphism.
 one morph.
 }}
 \examples{
-population <- rmultinom(1, 10, gtype_init())[,1]
-iterate(population, 1000)
-population_size <- 10
-population <- rmultinom(1, population_size, gtype_init())[,1]
+iterate(isoplethy(10), 1000)
+population <- isoplethy(10)
 morph_frequency(population)
 mono <- iterate_to_monomorphism(population, 30)
 table(mono$Genotype)

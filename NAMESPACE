@@ -2,9 +2,10 @@
 
 export(G)
 export(M)
+export(as_genotype)
 export(gamete_frequency)
 export(gamete_frequency_by_morph)
-export(gtype_init)
+export(isoplethy)
 export(iterate)
 export(iterate_to_dimorphism)
 export(iterate_to_monomorphism)

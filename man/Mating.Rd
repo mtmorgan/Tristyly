@@ -15,7 +15,7 @@ mate(population, G = Tristyly::G(), M = Tristyly::M())
 }
 \arguments{
 \item{population}{A numeric() vector of genotype counts, in the
-same form as returned by \code{gtype_init()}, but with
+same form as returned by \code{isoplethy()}, but with
 \code{sum(population)} the size of the population.}
 
 \item{G}{See \code{G()}.}
@@ -50,8 +50,7 @@ equal morph-specific female fertility are currently supported.
 }}
 \examples{
 M()
-gtype <- gtype_init()
-n <- setNames(as.integer(gtype * 1000), names(gtype))
+n <- isoplethy(1000)
 morph_frequency(n)
 n1 <- mate(n)
 n1
