@@ -77,7 +77,7 @@ morph_frequency <- function(population) {
 #' n1
 #' morph_frequency(n1)
 #' @export
-mate <- function(population, G = Tristyly::G(0), M = Tristyly::M()) {
+mate <- function(population, G = Tristyly::G(), M = Tristyly::M()) {
     stopifnot(
         ## population is checked in call to .mate
         identical(dimnames(G), dimnames(G0)),
@@ -95,10 +95,16 @@ mate <- function(population, G = Tristyly::G(0), M = Tristyly::M()) {
     result <- NULL
     for (morph in names(morph_freq)) {
         female <- gamete_freq[morph,]
-        female <- female / sum(female)
+        n <- sum(female)
+        if (!n)
+            next
+        female <- female / n
 
         male <- colSums(gamete_freq * M[morph,])
-        male <- male / sum(male)
+        n <- sum(male)
+        if (!n)
+            next
+        male <- male / n
 
         offspring <- morph_freq[morph] * outer(female, male)
         if (is.null(result))

@@ -11,7 +11,7 @@ M()
 
 morph_frequency(population)
 
-mate(population, G = Tristyly::G(0), M = Tristyly::M())
+mate(population, G = Tristyly::G(), M = Tristyly::M())
 }
 \arguments{
 \item{population}{A numeric() vector of genotype counts, in the

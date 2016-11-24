@@ -16,6 +16,7 @@ Description: Tristyly is a plant polymorhism in which there are three
     implements these features to allow simulation of morph ration
     dynamics in finite populations.
 Depends: R (>= 3.4.0)
+Imports: tibble
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
