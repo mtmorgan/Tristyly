@@ -10,3 +10,59 @@ vignette: >
   % \VignetteEngine{knitr::rmarkdown}
 ---
 
+```{r setup, echo=FALSE}
+suppressPackageStartupMessages({
+    library(Tristyly)
+})
+```
+
+# Methods
+
+## Genetics
+
+The genetics are summarized by the relationship between genotypes and
+the gametes produced. The data object `G0` represents gametes produced
+in the absence of recombination between loci, `G1` the gametes
+produced in the presence of free recombination.
+
+```{r genetics}
+library(Tristyly)
+genetics
+G0          # complete linkage
+G1          # free recombination
+```
+
+Arbitrary recombination between loci occurs at rate `r`, with gamete
+frequencies summaried by the function `G()`:
+
+```{r recombination}
+G <- G(0.1)     # e.g., recombination between loci = 0.1
+```
+
+Initial genotype frequencies are given by a vector `gtype`, e.g.,
+
+```{r gtype-1}
+gtype <- gtype_init()    # approximate isoplethy
+gtype
+```
+
+Inputs do not have to be frequencies
+
+```{r gtype-2}
+gtype_init(c(sm_sm=100, sM_sm=70, sM_sM=20, Sm_sm=50))
+```
+
+Gamete frequencies prior to mating at the genotype level are
+
+```{r gamete}
+gametes(gtype, G)
+```
+
+and at the morph level
+
+```{r gamete-morph}
+gametes_by_morph(gtype, G)
+```
+
+## Mating
+

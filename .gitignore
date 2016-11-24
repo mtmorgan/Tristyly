@@ -1,3 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
+Tristyly.Rproj
+vignettes/*html
+vignettes/*R
