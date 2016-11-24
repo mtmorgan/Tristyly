@@ -4,11 +4,17 @@
 \alias{Inheritance}
 \alias{G}
 \alias{gtype_init}
+\alias{gamete_frequency}
+\alias{gamete_frequency_by_morph}
 \title{Inheritance}
 \usage{
-G(r)
+G(r = 0)
 
 gtype_init(gtype)
+
+gamete_frequency(gtype, G)
+
+gamete_frequency_by_morph(gtype, G)
 }
 \arguments{
 \item{r}{numeric(1) recombination rate, between 0 (complete
@@ -20,10 +26,17 @@ NAs. The names of the vector correspond to the \code{Genotype}
 column of the \code{genetics} data object; names cannot be
 duplicated. If missing, genotypes are set to approximate
 isoplethy under complete disassortative mating.}
+
+\item{G}{numeric() matrix of genotype-to-gamete transition
+probabilities, from \code{G()}.}
 }
 \value{
 A vector of genotype frequencies (i.e., non-negative values
     summing to 1)
+
+numeric() matrix of genotype x gamete expected frequencies
+
+numeric() matrix of morph x gamete expected frequencies.
 }
 \description{
 Inheritance
@@ -36,6 +49,13 @@ the S and M loci.
 
 \item \code{gtype_init}: Create initial genotype frequencies in
 standard form.
+
+\item \code{gamete_frequency}: Calculate gamete freqencies from current
+genotype frequencies and mode of inheritance.
+
+\item \code{gamete_frequency_by_morph}: Calculate gamete frequencies produced by
+each morph from current genotype frequencies and mode of
+inheritance.
 }}
 \examples{
 G(0)
@@ -43,6 +63,6 @@ G(1)
 G(.1)
 
 gtype_init()    # approximate isoplethy
-gtype_init(sm_sm=100, sM_sm=70, sM_sM=20, Sm_sm=50)
+gtype_init(sm/sm=100, sM/sm=70, sM/sM=20, Sm/sm=50)
 }
 

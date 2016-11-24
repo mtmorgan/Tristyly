@@ -15,7 +15,7 @@ NULL
 #' G(.1)
 #' 
 #' @export
-G <- function(r) {
+G <- function(r = 0) {
     stopifnot(is.numeric(r), length(r) == 1L, !is.na(r), r >= 0, r <= 1)
     (1 - r) * G0 + r * G1
 }
@@ -32,19 +32,20 @@ G <- function(r) {
 #'     summing to 1)
 #' @examples
 #' gtype_init()    # approximate isoplethy
-#' gtype_init(sm_sm=100, sM_sm=70, sM_sM=20, Sm_sm=50)
+#' gtype_init(sm/sm=100, sM/sm=70, sM/sM=20, Sm/sm=50)
 #' @export
 gtype_init <- function(gtype) {
     if (missing(gtype)) {
-        ## FIXME: Isoplethy
-        gtype <- c(
-            sm_sm=0.33,
-            sM_sm=0.22, sM_sM=0.11,
-            Sm_sm = 0.11, SM_sm=0.055, Sm_sM=0.055, SM_sM=0.11)
+        ## Approximate isoplethy
+        gtype <- setNames(
+            c(0.333, 0.309, 0.024, 0.122, 0.122, 0.045, 0.045, 0, 0,
+              0),
+            c("sm/sm", "sM/sm", "sM/sM", "Sm/sm", "SM/sm", "Sm/sM",
+              "SM/sM", "Sm/Sm", "SM/Sm", "SM/SM"))
     }
     stopifnot(
         is.numeric(gtype), length(gtype) != 0, !anyNA(gtype),
-        !anyDuplicated(names(gtype)),
+        !is.null(names(gtype)), !anyDuplicated(names(gtype)),
         all(names(gtype) %in% genetics$Genotype),
         all(gtype >= 0),
         sum(gtype) > 0)
@@ -64,12 +65,12 @@ gtype_init <- function(gtype) {
 #'     probabilities, from \code{G()}.
 #' @return numeric() matrix of genotype x gamete expected frequencies
 #' @export
-gametes <- function(gtype, G) {
+gamete_frequency <- function(gtype, G) {
     gtype <- gtype_init(gtype)
-    .gametes(gtype, G)
+    .gamete_frequency(gtype, G)
 }
 
-.gametes <- function(gtype, G)
+.gamete_frequency <- function(gtype, G)
     G * gtype
 
 #' @describeIn Inheritance Calculate gamete frequencies produced by
@@ -77,12 +78,12 @@ gametes <- function(gtype, G) {
 #'     inheritance.
 #' @return numeric() matrix of morph x gamete expected frequencies.
 #' @export
-gametes_by_morph <- function(gtype, G) {
+gamete_frequency_by_morph <- function(gtype, G) {
     gtype <- gtype_init(gtype)
-    .gametes_by_morph(gtype, G)
+    .gamete_frequency_by_morph(gtype, G)
 }
 
-.gametes_by_morph <- function(gtype, G) {
-    gametes <- .gametes(gtype, G)
-    rowsum(gametes, genetics$Morph)
+.gamete_frequency_by_morph <- function(gtype, G) {
+    gametes <- .gamete_frequency(gtype, G)
+    as.matrix(rowsum(gametes, genetics$Morph))
 }    
