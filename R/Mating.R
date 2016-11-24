@@ -76,6 +76,7 @@ morph_frequency <- function(population) {
 #' n1 <- mate(n)
 #' n1
 #' morph_frequency(n1)
+#' @importFrom stats rmultinom setNames
 #' @export
 mate <- function(population, G = Tristyly::G(), M = Tristyly::M()) {
     stopifnot(

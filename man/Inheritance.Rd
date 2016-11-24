@@ -63,6 +63,6 @@ G(1)
 G(.1)
 
 gtype_init()    # approximate isoplethy
-gtype_init(sm/sm=100, sM/sm=70, sM/sM=20, Sm/sm=50)
+gtype_init(c(`sm/sm`=100, `sM/sm`=70, `sM/sM`=20, `Sm/sm`=50))
 }
 

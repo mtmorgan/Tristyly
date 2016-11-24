@@ -32,7 +32,7 @@ G <- function(r = 0) {
 #'     summing to 1)
 #' @examples
 #' gtype_init()    # approximate isoplethy
-#' gtype_init(sm/sm=100, sM/sm=70, sM/sM=20, Sm/sm=50)
+#' gtype_init(c(`sm/sm`=100, `sM/sm`=70, `sM/sM`=20, `Sm/sm`=50))
 #' @export
 gtype_init <- function(gtype) {
     if (missing(gtype)) {

@@ -16,6 +16,11 @@ iterate_to_dimorphism(population, times, G = Tristyly::G(),
   M = Tristyly::M(), progress.interval = 50)
 }
 \arguments{
+\item{population}{See \code{\link{Mating}}.}
+
+\item{generations}{the number of generations to iterate; the initial
+population is generation 1.}
+
 \item{G}{See \code{\link{G}()}.}
 
 \item{M}{See \code{\link{M}()}.}
@@ -25,9 +30,6 @@ monomorphism.}
 
 \item{progress.interval}{numeric(1) report progress every \code{verbose}
 iterations. Suppress output with \code{verbose = Inf}.}
-
-\item{generation}{the number of generations to iterate; the initial
-population is generation 1.}
 }
 \value{
 a tibble (data.frame) summarizing morph frequencies in each
@@ -50,7 +52,6 @@ one morph.
 \examples{
 population <- rmultinom(1, 10, gtype_init())[,1]
 iterate(population, 1000)
-#' @importFrom tibble tibble
 population_size <- 10
 population <- rmultinom(1, population_size, gtype_init())[,1]
 morph_frequency(population)

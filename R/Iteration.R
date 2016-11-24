@@ -5,7 +5,8 @@ NULL
 
 #' @describeIn Iteration Iterate a single population for a fixed
 #'     number of generations.
-#' @param generation the number of generations to iterate; the initial
+#' @param population See \code{\link{Mating}}.
+#' @param generations the number of generations to iterate; the initial
 #'     population is generation 1.
 #' @param G See \code{\link{G}()}.
 #' @param M See \code{\link{M}()}.
@@ -14,7 +15,7 @@ NULL
 #' @examples
 #' population <- rmultinom(1, 10, gtype_init())[,1]
 #' iterate(population, 1000)
-#' #' @importFrom tibble tibble
+#' @importFrom tibble tibble
 #' @export
 iterate <-
     function(population, generations, G = Tristyly::G(), M = Tristyly::M())

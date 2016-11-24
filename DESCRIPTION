@@ -17,6 +17,8 @@ Description: Tristyly is a plant polymorhism in which there are three
     dynamics in finite populations.
 Depends: R (>= 3.4.0)
 Imports: tibble
+Suggests: knitr
+VignetteBuilder: knitr
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true

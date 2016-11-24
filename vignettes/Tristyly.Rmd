@@ -49,19 +49,19 @@ gtype
 Inputs do not have to be frequencies
 
 ```{r gtype-2}
-gtype_init(c(sm_sm=100, sM_sm=70, sM_sM=20, Sm_sm=50))
+gtype_init(c("sm/sm"=100, "sM/sm"=70, "sM/sM"=20, "Sm/sm"=50))
 ```
 
 Gamete frequencies prior to mating at the genotype level are
 
 ```{r gamete}
-gametes(gtype, G)
+gamete_frequency(gtype, G)
 ```
 
 and at the morph level
 
 ```{r gamete-morph}
-gametes_by_morph(gtype, G)
+gamete_frequency_by_morph(gtype, G)
 ```
 
 ## Mating
