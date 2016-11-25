@@ -96,8 +96,7 @@ mate <- function(population, G = Tristyly::G(), M = Tristyly::M()) {
         female <- gamete_freq[morph,]
         female <- female / sum(female)
 
-        male_freq <- morph_freq * M[morph,]
-        male <- colSums(gamete_freq * male_freq)
+        male <- colSums(gamete_freq * M[morph,])
         male <- male / sum(male)
         if (!all(is.finite(male)))
             next
