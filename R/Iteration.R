@@ -13,7 +13,9 @@ NULL
 #' @return a tibble (data.frame) summarizing morph frequencies in each
 #'     generation, including the first (generation 1)
 #' @examples
-#' iterate(isoplethy(10), 1000)
+#' tbl <- iterate(isoplethy(30), 100)
+#' tbl
+#' tail(tbl)
 #' @importFrom tibble tibble
 #' @export
 iterate <-
@@ -102,7 +104,7 @@ replicate_to_dimorphism <-
 #'     (morph lost). If two morphs are lost in the same generation,
 #'     the value of \code{Morph} is \code{NA}.
 #' @examples
-#' population <- isoplethy(20)
+#' population <- isoplethy(10)
 #' morph_frequency(population)
 #' di <- iterate_to_dimorphism(population, 100)
 #' table(di$Morph_lost)

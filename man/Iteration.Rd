@@ -73,11 +73,13 @@ one morph.
 monomorphism.
 }}
 \examples{
-iterate(isoplethy(10), 1000)
-di <- replicate_to_dimorphism(20, 100)
+tbl <- iterate(isoplethy(30), 100)
+tbl
+tail(tbl)
+di <- replicate_to_dimorphism(10, 100)
 table(di$Morph_lost)
 plot(ecdf(di$Generation), xlab="Generation")
-population <- isoplethy(20)
+population <- isoplethy(10)
 morph_frequency(population)
 di <- iterate_to_dimorphism(population, 100)
 table(di$Morph_lost)
