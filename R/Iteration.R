@@ -44,7 +44,7 @@ iterate <-
         Morph=factor(
             rep(levels(genetics$Morph), generations),
             levels=levels(genetics$Morph)),
-        Frequecy=result)
+        Frequency=result)
 }       
 
 #' @describeIn Iteration Repeatedly iterate a population until

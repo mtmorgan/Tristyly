@@ -11,7 +11,7 @@
 \usage{
 G(r = 0)
 
-isoplethy(n)
+isoplethy(N)
 
 as_genotype(gtype)
 
@@ -23,7 +23,7 @@ gamete_frequency_by_morph(gtype, G)
 \item{r}{numeric(1) recombination rate, between 0 (complete
 linkage) and 1 (free recombination).}
 
-\item{n}{missing or integer(1). When missing, return genotype
+\item{N}{missing or integer(1). When missing, return genotype
 frequencies in populations at approximate isoplethic
 equilibirum. Otherwise, return a sample of size \code{n} drawn
 from a poualation at approximate isoplethy.}
