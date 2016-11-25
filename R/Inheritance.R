@@ -34,8 +34,9 @@ G <- function(r = 0) {
 #' @export
 isoplethy <- function(N) {
     gtype <- setNames(
-        c(0.333, 0.309, 0.024, 0.122, 0.122, 0.045, 0.045, 0, 0,
-          0),
+        c(0.333333333333333, 0.309401076758503, 0.0239322565748303,
+          0.122008467928146, 0.122008467928146, 0.0446581987385205,
+          0.0446581987385205, 0, 0, 0),
         c("sm/sm", "sM/sm", "sM/sM", "Sm/sm", "SM/sm", "Sm/sM",
           "SM/sM", "Sm/Sm", "SM/Sm", "SM/SM"))
     gtype <- as_genotype(gtype)
@@ -43,7 +44,6 @@ isoplethy <- function(N) {
         gtype <- .sample(gtype, N)
     gtype
 }
-
 
 .sample <- function(gtype, N)
     rmultinom(1L, N, gtype)[,1]
