@@ -3,11 +3,15 @@
 \name{Iteration}
 \alias{Iteration}
 \alias{iterate}
+\alias{replicate_to_dimorphism}
 \alias{iterate_to_dimorphism}
 \alias{iterate_to_monomorphism}
 \title{Iteration}
 \usage{
 iterate(population, generations, G = Tristyly::G(), M = Tristyly::M())
+
+replicate_to_dimorphism(N, times, G = Tristyly::G(), M = Tristyly::M(),
+  verbose = FALSE)
 
 iterate_to_dimorphism(population, times, G = Tristyly::G(),
   M = Tristyly::M(), verbose = FALSE)
@@ -25,6 +29,8 @@ population is generation 1.}
 
 \item{M}{See \code{\link{M}()}.}
 
+\item{N}{integer(1) Population size}
+
 \item{times}{numeric(1) times to iterate the population to
 monomorphism.}
 
@@ -34,6 +40,11 @@ every \code{verbose} iterations.}
 \value{
 a tibble (data.frame) summarizing morph frequencies in each
     generation, including the first (generation 1)
+
+A \code{tibble} (data.frame) with columns \code{Generation}
+    (generation of loss of first morph) and \code{Morph_lost}
+    (morph lost). If two morphs are lost in the same generation,
+    the value of \code{Morph} is \code{NA}.
 
 A \code{tibble} (data.frame) with columns \code{Generation}
     (generation of loss of first morph) and \code{Morph_lost}
@@ -52,6 +63,9 @@ Iteration
 \item \code{iterate}: Iterate a single population for a fixed
 number of generations.
 
+\item \code{replicate_to_dimorphism}: Iterate independent populations to loss of
+one morph
+
 \item \code{iterate_to_dimorphism}: Repeatedly iterate a population until loss of
 one morph.
 
@@ -60,6 +74,14 @@ monomorphism.
 }}
 \examples{
 iterate(isoplethy(10), 1000)
+di <- replicate_to_dimorphism(20, 100)
+table(di$Morph_lost)
+plot(ecdf(di$Generation), xlab="Generation")
+population <- isoplethy(20)
+morph_frequency(population)
+di <- iterate_to_dimorphism(population, 100)
+table(di$Morph_lost)
+plot(ecdf(di$Generation), xlab="Generation")
 population <- isoplethy(10)
 morph_frequency(population)
 mono <- iterate_to_monomorphism(population, 30)

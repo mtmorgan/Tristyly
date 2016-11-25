@@ -45,16 +45,68 @@ iterate <-
         Frequency=result)
 }       
 
-#' @describeIn Iteration Repeatedly iterate a population until loss of
-#'     one morph.
-#' @param times numeric(1) times to iterate the population to
-#'     monomorphism.
+#' @describeIn Iteration Iterate independent populations to loss of
+#'     one morph
+#' @param N integer(1) Population size
 #' @param verbose missing or numeric(1) When present, report progress
 #'     every \code{verbose} iterations.
 #' @return A \code{tibble} (data.frame) with columns \code{Generation}
 #'     (generation of loss of first morph) and \code{Morph_lost}
 #'     (morph lost). If two morphs are lost in the same generation,
 #'     the value of \code{Morph} is \code{NA}.
+#' @examples
+#' di <- replicate_to_dimorphism(10, 100)
+#' table(di$Morph_lost)
+#' plot(ecdf(di$Generation), xlab="Generation")
+#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @export
+replicate_to_dimorphism <-
+    function(N, times, G = Tristyly::G(), M = Tristyly::M(), verbose=FALSE)
+{
+    stopifnot(
+        is.numeric(N), length(N) == 1, !is.na(N), N > 0,
+        is.numeric(times), length(times) == 1, !is.na(times), times > 0)
+    if (verbose)
+        pb <- txtProgressBar(style=3)
+
+    result <- vector("list", times)
+    for (i in seq_len(times)) {
+        if (verbose && (i %% verbose) == 0)
+            setTxtProgressBar(pb, i / times)
+        result[[i]] <- .iterate_to_morphism(isoplethy(N), 1, 2L, G, M, FALSE)
+    }
+
+    if (verbose)
+        close(pb)
+
+    generation <- vapply(result, "[[", integer(1), 1)
+    morph <- vapply(result, function(elt) {
+        elt <- elt$Morph[[1]]
+        if (sum(elt == 0) > 1L) {
+            NA_character_
+        } else
+            names(which.min(elt))
+    }, character(1))
+    tibble(
+        Generation=generation,
+        Morph_lost=factor(morph, levels=levels(genetics$Morph))
+    )
+}
+
+#' @describeIn Iteration Repeatedly iterate a population until loss of
+#'     one morph.
+#' @param times numeric(1) times to iterate the population to
+#'     monomorphism.
+#' @return A \code{tibble} (data.frame) with columns \code{Generation}
+#'     (generation of loss of first morph) and \code{Morph_lost}
+#'     (morph lost). If two morphs are lost in the same generation,
+#'     the value of \code{Morph} is \code{NA}.
+#' @examples
+#' population <- isoplethy(20)
+#' morph_frequency(population)
+#' di <- iterate_to_dimorphism(population, 100)
+#' table(di$Morph_lost)
+#' plot(ecdf(di$Generation), xlab="Generation")
 #' @export
 iterate_to_dimorphism <-
     function(population, times, G = Tristyly::G(), M = Tristyly::M(),

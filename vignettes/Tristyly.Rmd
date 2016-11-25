@@ -67,14 +67,23 @@ until a specific number of generations has passed. `plot_iterations()`
 visualizes the result.
 
 ```{r iterate}
-its <- iterate(isoplethy(50), 1000)
+its <- iterate(isoplethy(50), 100)
 its
 tail(its)
-plot_iterations(its)
+plot_iterations(its, pch=20)
 ```
 
-The `iterate_to_*()` functions repeatedly iterate a single population
-until loss of one or two morphs.
+The `replicate_to_dimorphism()` function iterates independent
+populations to loss of one morph.
+
+```{r replicate_to_dimorphism}
+tbl <- replicate_to_dimorphism(N=20, times=100)
+table(tbl$Morph_lost) / nrow(tbl)
+plot(ecdf(tbl$Generation))
+```
+
+The `iterate_to_dimorphism()` function repeatedly iterate a single
+population until loss of one.
 
 ```{r iterate-to-dimorphism}
 tbl <- iterate_to_dimorphism(isoplethy(20), times=100)
