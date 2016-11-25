@@ -54,7 +54,7 @@ iterate(isoplethy(10), 1000)
 population <- isoplethy(10)
 morph_frequency(population)
 mono <- iterate_to_monomorphism(population, 30)
-table(mono$Genotype)
+table(mono$Morph_kept)
 plot(ecdf(mono$Generation), xlab="Generation")
 }
 
