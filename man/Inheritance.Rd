@@ -5,8 +5,6 @@
 \alias{G}
 \alias{isoplethy}
 \alias{as_genotype}
-\alias{gamete_frequency}
-\alias{gamete_frequency_by_morph}
 \title{Inheritance}
 \usage{
 G(r = 0)
@@ -14,10 +12,6 @@ G(r = 0)
 isoplethy(N)
 
 as_genotype(gtype)
-
-gamete_frequency(gtype, G)
-
-gamete_frequency_by_morph(gtype, G)
 }
 \arguments{
 \item{r}{numeric(1) recombination rate, between 0 (complete
@@ -34,17 +28,10 @@ NAs. The names of the vector correspond to the \code{Genotype}
 column of the \code{genetics} data object; names cannot be
 duplicated. If missing, genotypes are set to approximate
 isoplethy under complete disassortative mating.}
-
-\item{G}{numeric() matrix of genotype-to-gamete transition
-probabilities, from \code{G()}.}
 }
 \value{
 A vector of genotype frequencies (i.e., non-negative values
     summing to 1)
-
-numeric() matrix of genotype x gamete expected frequencies
-
-numeric() matrix of morph x gamete expected frequencies.
 }
 \description{
 Inheritance
@@ -60,20 +47,12 @@ genotype frequencies in standard form.
 
 \item \code{as_genotype}: Create a vector of genotype frequencies in
 standard form.
-
-\item \code{gamete_frequency}: Calculate gamete freqencies from current
-genotype frequencies and mode of inheritance.
-
-\item \code{gamete_frequency_by_morph}: Calculate gamete frequencies produced by
-each morph from current genotype frequencies and mode of
-inheritance.
 }}
 \examples{
 G(0)
 G(1)
 G(.1)
-
-isoplethy()      # approximate isoplethy
+isoplethy()     # approximate isoplethy
 isoplethy(100)  # sample from isoplethic population
 }
 

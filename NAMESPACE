@@ -3,8 +3,6 @@
 export(G)
 export(M)
 export(as_genotype)
-export(gamete_frequency)
-export(gamete_frequency_by_morph)
 export(isoplethy)
 export(iterate)
 export(iterate_to_dimorphism)

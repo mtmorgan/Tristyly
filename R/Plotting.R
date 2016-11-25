@@ -22,12 +22,10 @@ plot_iterations <- function(iterations, ..., type="b", add=FALSE) {
 
     max <- sqrt(1 - .5^2)
     y <- max * long
-    x_offset <- y / tan(pi/3)
-    x <- x_offset + max * mid / sin(pi/3)
+    x <- y / tan(pi/3) + max * mid / sin(pi/3)
 
     if (!add)
         .plot_crosby(max)
-
     lines(y ~ x, ..., type="b")
 }
 
@@ -37,9 +35,6 @@ plot_iterations <- function(iterations, ..., type="b", add=FALSE) {
     plot(integer(), type="n", xlim=c(0, 1), ylim=c(0, max), asp=1,
          ann=FALSE, axes=FALSE)
     lines(c(0, 1, .5, 0), c(0, 0, max, 0))
-    text(c(0.5, 0.25, 0.75),
-         c(0, max / 2, max / 2),
-         c("Long", "Mid", "Short"),
-         pos=c(1, 2, 4), offset=.8,
-         cex=1.8)
+    text(c(0.5, 0.25, 0.75), c(0, max / 2, max / 2), c("Long", "Mid", "Short"),
+         pos=c(1, 2, 4), offset=.8, cex=1.8)
 }

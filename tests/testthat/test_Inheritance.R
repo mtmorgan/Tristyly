@@ -1,4 +1,7 @@
-test_that("gamete_frequency()  works", {
+test_that(".gamete_frequency()  works", {
+    gamete_frequency <- function(g, G)
+        Tristyly:::.gamete_frequency(as_genotype(g), G)
+
     obs <- colSums(gamete_frequency(c(`sm/sm`=1), G(0)))
     exp <- structure(c(1, 0, 0, 0), .Names = c("sm", "sM", "Sm", "SM"))
     expect_identical(obs, exp)

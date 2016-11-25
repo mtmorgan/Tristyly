@@ -8,12 +8,10 @@ NULL
 #'     the S and M loci.
 #' @param r numeric(1) recombination rate, between 0 (complete
 #'     linkage) and 1 (free recombination).
-#'
 #' @examples
 #' G(0)
 #' G(1)
 #' G(.1)
-#'
 #' @export
 G <- function(r = 0) {
     stopifnot(is.numeric(r), length(r) == 1L, !is.na(r), r >= 0, r <= 1)
@@ -29,7 +27,7 @@ G <- function(r = 0) {
 #' @return A vector of genotype frequencies (i.e., non-negative values
 #'     summing to 1)
 #' @examples
-#' isoplethy()      # approximate isoplethy
+#' isoplethy()     # approximate isoplethy
 #' isoplethy(100)  # sample from isoplethic population
 #' @export
 isoplethy <- function(N) {
@@ -37,29 +35,14 @@ isoplethy <- function(N) {
         c(0.333333333333333, 0.309401076758503, 0.0239322565748303,
           0.122008467928146, 0.122008467928146, 0.0446581987385205,
           0.0446581987385205, 0, 0, 0),
-        c("sm/sm", "sM/sm", "sM/sM", "Sm/sm", "SM/sm", "Sm/sM",
-          "SM/sM", "Sm/Sm", "SM/Sm", "SM/SM"))
-    gtype <- as_genotype(gtype)
+        genetics$Genotype)
     if (!missing(N))
         gtype <- .sample(gtype, N)
     gtype
 }
 
 .sample <- function(gtype, N)
-    rmultinom(1L, N, gtype)[,1]
-
-.stopifnot_is_single_integer <- function(n) {
-    stopifnot(is.numeric(n), length(n) == 1L, !is.na(n))
-}
-
-.stopifnot_is_gtype <- function(gtype) {
-    stopifnot(
-        is.numeric(gtype), length(gtype) != 0, !anyNA(gtype),
-        !is.null(names(gtype)), !anyDuplicated(names(gtype)),
-        all(names(gtype) %in% genetics$Genotype),
-        all(gtype >= 0),
-        sum(gtype) > 0)
-}
+    rmultinom(1L, N, gtype)[, 1L]
 
 #' @describeIn Inheritance Create a vector of genotype frequencies in
 #'     standard form.
@@ -82,29 +65,17 @@ as_genotype <- function(gtype) {
     result / sum(result)
 }
 
-#' @describeIn Inheritance Calculate gamete freqencies from current
-#'     genotype frequencies and mode of inheritance.
-#' @param G numeric() matrix of genotype-to-gamete transition
-#'     probabilities, from \code{G()}.
-#' @return numeric() matrix of genotype x gamete expected frequencies
-#' @export
-gamete_frequency <- function(gtype, G) {
-    gtype <- as_genotype(gtype)
-    .gamete_frequency(gtype, G)
+.stopifnot_is_gtype <- function(gtype) {
+    stopifnot(
+        is.numeric(gtype), length(gtype) != 0, !anyNA(gtype),
+        !is.null(names(gtype)), !anyDuplicated(names(gtype)),
+        all(names(gtype) %in% genetics$Genotype),
+        all(gtype >= 0),
+        sum(gtype) > 0)
 }
 
 .gamete_frequency <- function(gtype, G)
     G * gtype
-
-#' @describeIn Inheritance Calculate gamete frequencies produced by
-#'     each morph from current genotype frequencies and mode of
-#'     inheritance.
-#' @return numeric() matrix of morph x gamete expected frequencies.
-#' @export
-gamete_frequency_by_morph <- function(gtype, G) {
-    gtype <- as_genotype(gtype)
-    .gamete_frequency_by_morph(gtype, G)
-}
 
 .gamete_frequency_by_morph <- function(gtype, G) {
     gametes <- .gamete_frequency(gtype, G)

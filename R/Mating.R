@@ -3,32 +3,6 @@
 #' @name Mating
 NULL
 
-.cannonical_gtype <- local({
-    ## map between all gentoypes and cannonical (independent of
-    ## parent-of-origin) form.
-    ##
-    ## use of local() and function to allow reference to lazy object
-    ## G0, which is not available at package load time.
-    value <- NULL
-    function() {
-        if (is.null(value)) {
-            ## first time through
-            gametes <- colnames(G(0))
-            all <- outer(gametes, gametes, paste, sep="/")
-            cannonical <- outer(gametes, gametes, function(x, y) {
-                paste(pmax(x, y), pmin(x, y), sep="/")
-            })
-            value <<- data.frame(
-                All=as.vector(all),
-                Cannonical=factor(
-                    as.vector(cannonical),
-                    levels=genetics$Genotype),
-                stringsAsFactors=FALSE)
-        }
-        value
-    }
-})
-
 #' @describeIn Mating Create a matrix describing dissasortative mating
 #'     and morph fertility. The i,jth entry in the matrix is the
 #'     contribution of pollen from morph j to the pollen pool of morph
@@ -78,11 +52,14 @@ morph_frequency <- function(population) {
 #' @importFrom stats rmultinom setNames
 #' @export
 mate <- function(population, G = Tristyly::G(), M = Tristyly::M()) {
-    .stopifnot_is_gtype(population)
     stopifnot(
-        identical(dimnames(G), dimnames(G0)),
+        identical(dimnames(G), dimnames(Tristyly::G())),
         identical(dimnames(M), dimnames(Tristyly::M())))
-    gtype <- .mate(as_genotype(population), G, M)
+    .mate_population(population, G, M)
+}
+
+.mate_population <- function(population, G, M) {
+    gtype <- .mate(.as_genotype(population), G, M)
     .sample(gtype, sum(population))
 }
 
@@ -108,5 +85,5 @@ mate <- function(population, G = Tristyly::G(), M = Tristyly::M()) {
     }
 
     ## collapse to cannonical form, ignoring sex of parent
-    vapply(split(exp, .cannonical_gtype()$Cannonical), sum, numeric(1))
+    vapply(split(exp, cannonical_gtype), sum, numeric(1))
 }

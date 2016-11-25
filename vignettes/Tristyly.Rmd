@@ -18,7 +18,7 @@ suppressPackageStartupMessages({
 
 # Methods
 
-## Genetics
+## Genetics and mating
 
 The genetics are summarized by the relationship between genotypes and
 the gametes produced. Arbitrary recombination between loci occurs at
@@ -28,9 +28,19 @@ rate `r`, with gamete frequencies summaried by the function `G()`:
 G <- G(0.1)            # e.g., recombination between loci = 0.1
 ```
 
+Mating is summarized by a matrix `M()` where entries i, j correspond
+to male fertility of morph j on female of morph i. Row sums correspond
+to differences in female fertility, column sums to differences in male
+fertility.
+
+
+```{r mating}
+M()
+```
+
 Approximately isoplethic genotype frequencies are given by
-`isoplethy()`; using an optional argument `n` creates a sample of size
-`n` from an isoplethic population.
+`isoplethy()`; using an optional argument `N` creates a sample of size
+`N` from an isoplethic population.
 
 ```{r gtype-1}
 isoplethy()
@@ -42,18 +52,32 @@ Arbitrary starting vectors are possible using `as_genotype()`
 ```{r gtype-2}
 as_genotype(c("sm/sm"=100, "sM/sm"=70, "sM/sM"=20, "Sm/sm"=50))
 ```
-
-Gamete frequencies prior to mating at the genotype level are
-
-```{r gamete}
-gamete_frequency(isoplethy(), G)
-```
-
-and at the morph level
+Morph frequencies are summarized with `morph_frequency()`
 
 ```{r gamete-morph}
-gamete_frequency_by_morph(isoplethy(), G)
+morph_frequency(isoplethy(30))
 ```
 
-## Mating
+## Iteration
 
+Change in morph frequence can be followed in several ways.
+
+The `iterate()` function takes an initial population and iterates it
+until a specific number of generations has passed. `plot_iterations()`
+visualizes the result.
+
+```{r iterate}
+its <- iterate(isoplethy(50), 1000)
+its
+tail(its)
+plot_iterations(its)
+```
+
+The `iterate_to_*()` functions repeatedly iterate a single population
+until loss of one or two morphs.
+
+```{r iterate-to-dimorphism}
+tbl <- iterate_to_dimorphism(isoplethy(20), times=100)
+table(tbl$Morph_lost, useNA="ifany")
+plot(log10(Generation) ~ Morph_lost, tbl)
+```

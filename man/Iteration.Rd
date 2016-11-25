@@ -3,17 +3,17 @@
 \name{Iteration}
 \alias{Iteration}
 \alias{iterate}
-\alias{iterate_to_monomorphism}
 \alias{iterate_to_dimorphism}
+\alias{iterate_to_monomorphism}
 \title{Iteration}
 \usage{
 iterate(population, generations, G = Tristyly::G(), M = Tristyly::M())
 
-iterate_to_monomorphism(population, times, G = Tristyly::G(),
-  M = Tristyly::M(), progress.interval = 10)
-
 iterate_to_dimorphism(population, times, G = Tristyly::G(),
-  M = Tristyly::M(), progress.interval = 50)
+  M = Tristyly::M(), verbose = FALSE)
+
+iterate_to_monomorphism(population, times, G = Tristyly::G(),
+  M = Tristyly::M(), verbose = FALSE)
 }
 \arguments{
 \item{population}{See \code{\link{Mating}}.}
@@ -28,12 +28,21 @@ population is generation 1.}
 \item{times}{numeric(1) times to iterate the population to
 monomorphism.}
 
-\item{progress.interval}{numeric(1) report progress every \code{verbose}
-iterations. Suppress output with \code{verbose = Inf}.}
+\item{verbose}{missing or numeric(1) When present, report progress
+every \code{verbose} iterations.}
 }
 \value{
 a tibble (data.frame) summarizing morph frequencies in each
     generation, including the first (generation 1)
+
+A \code{tibble} (data.frame) with columns \code{Generation}
+    (generation of loss of first morph) and \code{Morph_lost}
+    (morph lost). If two morphs are lost in the same generation,
+    the value of \code{Morph} is \code{NA}.
+
+A \code{tibble} (data.frame) with columns \code{Generation}
+    (generation until loss of two morphs) and \code{Morph_kept}
+    (the morph remaining in the population).
 }
 \description{
 Iteration
@@ -43,11 +52,11 @@ Iteration
 \item \code{iterate}: Iterate a single population for a fixed
 number of generations.
 
-\item \code{iterate_to_monomorphism}: Repeatedly iterate a population until
-monomorphism.
-
 \item \code{iterate_to_dimorphism}: Repeatedly iterate a population until loss of
 one morph.
+
+\item \code{iterate_to_monomorphism}: Repeatedly iterate a population until
+monomorphism.
 }}
 \examples{
 iterate(isoplethy(10), 1000)

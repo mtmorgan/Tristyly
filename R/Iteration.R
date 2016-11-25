@@ -24,15 +24,13 @@ iterate <-
         is.numeric(generations), length(generations) == 1L, !is.na(generations),
         generations > 0L)
 
-    N <- sum(population)
-
     result <- numeric(3L * generations)
     result[1:3] <- morph_frequency(population)
     for (i in seq_len(generations - 1L)) {
-        gtype <- .mate(.as_genotype(population), G, M)
-        population <- .sample(gtype, N)
+        population <- .mate_population(population, G, M)
+
         result[i * 3L + 1:3] <- morph_frequency(population)
-        if (sum(population != 0) == 1L) {
+        if (sum(population != 0) <= 1L) {
             idx <- seq(i * 3L + 1L, generations * 3L)
             result[idx] <- morph_frequency(population)
             break
@@ -47,43 +45,22 @@ iterate <-
         Frequency=result)
 }       
 
-#' @describeIn Iteration Repeatedly iterate a population until
-#'     monomorphism.
-#' @param times numeric(1) times to iterate the population to
-#'     monomorphism.
-#' @param progress.interval numeric(1) report progress every \code{verbose}
-#'     iterations. Suppress output with \code{verbose = Inf}.
-#' @examples
-#' population <- isoplethy(10)
-#' morph_frequency(population)
-#' mono <- iterate_to_monomorphism(population, 30)
-#' table(mono$Morph_kept)
-#' plot(ecdf(mono$Generation), xlab="Generation")
-#' @export
-iterate_to_monomorphism <-
-    function(population, times, G = Tristyly::G(), M = Tristyly::M(),
-             progress.interval=10)
-{
-    result <- .iterate_to_morphism(
-        population, times, 1L, G, M, progress.interval)
-
-    result$Morph <-
-        vapply(result$Morph, function(elt) names(which.max(elt)), character(1))
-    tibble(
-        Generation=result$Generation,
-        Morph_kept=factor(result$Morph, levels=levels(genetics$Morph))
-    )
-}
-
 #' @describeIn Iteration Repeatedly iterate a population until loss of
 #'     one morph.
+#' @param times numeric(1) times to iterate the population to
+#'     monomorphism.
+#' @param verbose missing or numeric(1) When present, report progress
+#'     every \code{verbose} iterations.
+#' @return A \code{tibble} (data.frame) with columns \code{Generation}
+#'     (generation of loss of first morph) and \code{Morph_lost}
+#'     (morph lost). If two morphs are lost in the same generation,
+#'     the value of \code{Morph} is \code{NA}.
 #' @export
 iterate_to_dimorphism <-
     function(population, times, G = Tristyly::G(), M = Tristyly::M(),
-             progress.interval=50)
+             verbose=FALSE)
 {
-    result <- .iterate_to_morphism(
-        population, times, 2L, G, M, progress.interval)
+    result <- .iterate_to_morphism(population, times, 2L, G, M, verbose)
 
     result$Morph <- vapply(result$Morph, function(elt) {
         if (sum(elt == 0) > 1L) {
@@ -97,22 +74,48 @@ iterate_to_dimorphism <-
     )
 }
 
+#' @describeIn Iteration Repeatedly iterate a population until
+#'     monomorphism.
+#' @return A \code{tibble} (data.frame) with columns \code{Generation}
+#'     (generation until loss of two morphs) and \code{Morph_kept}
+#'     (the morph remaining in the population).
+#' @examples
+#' population <- isoplethy(10)
+#' morph_frequency(population)
+#' mono <- iterate_to_monomorphism(population, 30)
+#' table(mono$Morph_kept)
+#' plot(ecdf(mono$Generation), xlab="Generation")
+#' @export
+iterate_to_monomorphism <-
+    function(population, times, G = Tristyly::G(), M = Tristyly::M(),
+             verbose=FALSE)
+{
+    result <- .iterate_to_morphism(population, times, 1L, G, M, verbose)
+
+    result$Morph <- vapply(result$Morph, function(elt) {
+        names(which.max(elt))
+    }, character(1))
+    tibble(
+        Generation=result$Generation,
+        Morph_kept=factor(result$Morph, levels=levels(genetics$Morph))
+    )
+}
+
 .iterate_to_morphism <-
-    function(population, times, n_morphs, G, M, progress.interval=10)
+    function(population, times, n_morphs, G, M, verbose)
 {
     stopifnot(
         is.numeric(times), length(times) == 1L, !is.na(times), times > 0L,
-        is.numeric(progress.interval), length(progress.interval) == 1L,
-        !is.na(progress.interval), progress.interval > 0L)
+        is.logical(verbose) || is.numeric(verbose),
+        length(verbose) == 1L, !is.na(verbose))
 
-    N <- sum(population)
     generation <- integer(times)
     morph <- vector("list", times)
     for (i in seq_len(times)) {
-        if ((i %% progress.interval) == 0L)
+        if (verbose && (i %% verbose) == 0L)
             message(i)
 
-        result <- .iterate1_to_morphism(population, n_morphs, N, G, M)
+        result <- .iterate1_to_morphism(population, n_morphs, G, M)
 
         generation[i] <- result$Iteration
         morph[[i]] <- morph_frequency(result$Population)
@@ -121,14 +124,13 @@ iterate_to_dimorphism <-
     list(Generation=generation, Morph=morph)
 }
 
-.iterate1_to_morphism <- function(population, n_morphs, N, G, M) {
+.iterate1_to_morphism <- function(population, n_morphs, G, M) {
     iteration <- 0L
     repeat {
         iteration <- iteration + 1L
         if (sum(.morph_frequency(population) != 0) <= n_morphs)
             break
-        gtype <- .mate(.as_genotype(population), G, M)
-        population <- .sample(gtype, N)
+        population <- .mate_population(population, G, M)
     }
     list(Iteration=iteration, Population=population)
 }
