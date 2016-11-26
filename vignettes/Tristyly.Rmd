@@ -1,7 +1,7 @@
 ---
 title: "`r packageDescription('Tristyly')[['Title']]`"
 author: "`r packageDescription('Tristyly')[['Author']]`"
-date: "Updated: 2016-11-24; Processed: `r Sys.Date()`"
+date: "Updated: 2016-11-26; Processed: `r Sys.Date()`"
 output:
   html_document:
     toc: true
@@ -58,9 +58,7 @@ Morph frequencies are summarized with `morph_frequency()`
 morph_frequency(isoplethy(30))
 ```
 
-# Iteration
-
-Change in morph frequence can be followed in several ways.
+## Iteration
 
 The `iterate_*` functions take an initial population and iterate it
 until a specific stopping criterion is met. `plot_iterations()`
@@ -78,20 +76,24 @@ tbl <- iterate_deterministic(isoplethy(3), , tolerance=1e-4)
 plot_iterations(tbl)
 ```
 
+The `iterate_to_dimorphism()` function repeatedly iterate a single
+population until loss of one morph.
+
+```{r iterate-to-dimorphism}
+tbl <- iterate_to_dimorphism(isoplethy(20), times=100)
+table(tbl$Morph_lost, useNA="ifany")
+plot(log10(Generation) ~ Morph_lost, tbl)
+```
+
+## Replication
+
 The `replicate_to_dimorphism()` function iterates independent
 populations to loss of one morph.
 
 ```{r replicate_to_dimorphism}
 tbl <- replicate_to_dimorphism(N=20, times=100)
 table(tbl$Morph_lost) / nrow(tbl)
-plot(ecdf(tbl$Generation))
-```
-
-The `iterate_to_dimorphism()` function repeatedly iterate a single
-population until loss of one.
-
-```{r iterate-to-dimorphism}
-tbl <- iterate_to_dimorphism(isoplethy(20), times=100)
-table(tbl$Morph_lost, useNA="ifany")
-plot(log10(Generation) ~ Morph_lost, tbl)
+plot(ecdf(tbl$Generation),
+    xlab="Generation", ylab="Cummulative Probability",
+    main="Time to Loss")
 ```
