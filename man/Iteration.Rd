@@ -2,12 +2,16 @@
 % Please edit documentation in R/Iteration.R
 \name{Iteration}
 \alias{Iteration}
+\alias{deterministic}
 \alias{iterate}
 \alias{replicate_to_dimorphism}
 \alias{iterate_to_dimorphism}
 \alias{iterate_to_monomorphism}
 \title{Iteration}
 \usage{
+deterministic(population, generations, tolerance, G = Tristyly::G(),
+  M = Tristyly::M())
+
 iterate(population, generations, G = Tristyly::G(), M = Tristyly::M())
 
 replicate_to_dimorphism(N, times, G = Tristyly::G(), M = Tristyly::M(),
@@ -22,8 +26,12 @@ iterate_to_monomorphism(population, times, G = Tristyly::G(),
 \arguments{
 \item{population}{See \code{\link{Mating}}.}
 
-\item{generations}{the number of generations to iterate; the initial
-population is generation 1.}
+\item{generations}{the number of generations to iterate; the
+initial population is generation 1.}
+
+\item{tolerance}{Minimum between-generation absolute change in
+genotype frequency for terminiation. Specify either
+\code{generations} or \code{tolerance}.}
 
 \item{G}{See \code{\link{G}()}.}
 
@@ -60,6 +68,10 @@ Iteration
 }
 \section{Functions}{
 \itemize{
+\item \code{deterministic}: Deterministically iterate a single population
+for a fixed number of generations, or until genotype frequences
+change by less than a specified amount.
+
 \item \code{iterate}: Iterate a single population for a fixed
 number of generations.
 
@@ -73,6 +85,9 @@ one morph.
 monomorphism.
 }}
 \examples{
+set.seed(123L)
+deterministic(isoplethy(4), 50)
+deterministic(isoplethy(4), , 1e-6)
 tbl <- iterate(isoplethy(30), 100)
 tbl
 tail(tbl)

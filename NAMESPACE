@@ -3,6 +3,7 @@
 export(G)
 export(M)
 export(as_genotype)
+export(deterministic)
 export(isoplethy)
 export(iterate)
 export(iterate_to_dimorphism)

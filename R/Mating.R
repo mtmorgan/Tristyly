@@ -68,7 +68,7 @@ mate <- function(population, G = Tristyly::G(), M = Tristyly::M()) {
     gamete_freq <- .gamete_frequency_by_morph(gtype, G)
     morph_freq <- rowSums(gamete_freq)
 
-    exp <- NULL
+    exp <- numeric(length(cannonical_gtype))
     for (morph in names(morph_freq)[morph_freq != 0]) {
         female <- gamete_freq[morph,]
         female <- female / sum(female)
