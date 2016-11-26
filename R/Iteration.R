@@ -18,11 +18,11 @@ NULL
 #'     generation, including the first (generation 1)
 #' @examples
 #' set.seed(1234L)
-#' deterministic(isoplethy(4), 50)
-#' tbl <- deterministic(isoplethy(4), , 1e-6)
+#' iterate_deterministic(isoplethy(4), 50)
+#' tbl <- iterate_deterministic(isoplethy(4), , 1e-6)
 #' plot_iterations(tbl)
 #' @export
-deterministic <-
+iterate_deterministic <-
     function(population, generations, tolerance, G = Tristyly::G(),
              M = Tristyly::M())
 {
@@ -93,15 +93,15 @@ deterministic <-
         Frequency=result)
 }
 
-#' @describeIn Iteration Iterate a single population for a fixed
-#'     number of generations.
+#' @describeIn Iteration Stochastically iterate a single population
+#'     for a fixed number of generations.
 #' @examples
-#' tbl <- iterate(isoplethy(30), 100)
+#' tbl <- iterate_stochastic(isoplethy(30), 100)
 #' tbl
 #' tail(tbl)
 #' @importFrom tibble tibble
 #' @export
-iterate <-
+iterate_stochastic <-
     function(population, generations, G = Tristyly::G(), M = Tristyly::M())
 {
     .stopifnot_is_gtype(population)

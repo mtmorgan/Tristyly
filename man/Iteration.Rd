@@ -2,17 +2,18 @@
 % Please edit documentation in R/Iteration.R
 \name{Iteration}
 \alias{Iteration}
-\alias{deterministic}
-\alias{iterate}
+\alias{iterate_deterministic}
+\alias{iterate_stochastic}
 \alias{replicate_to_dimorphism}
 \alias{iterate_to_dimorphism}
 \alias{iterate_to_monomorphism}
 \title{Iteration}
 \usage{
-deterministic(population, generations, tolerance, G = Tristyly::G(),
+iterate_deterministic(population, generations, tolerance, G = Tristyly::G(),
   M = Tristyly::M())
 
-iterate(population, generations, G = Tristyly::G(), M = Tristyly::M())
+iterate_stochastic(population, generations, G = Tristyly::G(),
+  M = Tristyly::M())
 
 replicate_to_dimorphism(N, times, G = Tristyly::G(), M = Tristyly::M(),
   verbose = FALSE)
@@ -68,12 +69,12 @@ Iteration
 }
 \section{Functions}{
 \itemize{
-\item \code{deterministic}: Deterministically iterate a single population
+\item \code{iterate_deterministic}: Deterministically iterate a single population
 for a fixed number of generations, or until genotype frequences
 change by less than a specified amount.
 
-\item \code{iterate}: Iterate a single population for a fixed
-number of generations.
+\item \code{iterate_stochastic}: Stochastically iterate a single population
+for a fixed number of generations.
 
 \item \code{replicate_to_dimorphism}: Iterate independent populations to loss of
 one morph
@@ -85,10 +86,11 @@ one morph.
 monomorphism.
 }}
 \examples{
-set.seed(123L)
-deterministic(isoplethy(4), 50)
-deterministic(isoplethy(4), , 1e-6)
-tbl <- iterate(isoplethy(30), 100)
+set.seed(1234L)
+iterate_deterministic(isoplethy(4), 50)
+tbl <- iterate_deterministic(isoplethy(4), , 1e-6)
+plot_iterations(tbl)
+tbl <- iterate_stochastic(isoplethy(30), 100)
 tbl
 tail(tbl)
 di <- replicate_to_dimorphism(10, 100)

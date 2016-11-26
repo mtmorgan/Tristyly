@@ -5,13 +5,18 @@
 \alias{plot_iterations}
 \title{Plotting}
 \usage{
-plot_iterations(iterations, ..., type = "b", add = FALSE)
+plot_iterations(iterations, ..., pch, type = "b", add = FALSE)
 }
 \arguments{
-\item{iterations}{An object returned by \code{\link{iterate}}.}
+\item{iterations}{An object returned by
+\code{\link{iterate_stochastic}} or
+\code{\link{iterate_deterministic}}.}
 
 \item{...}{Additional graphical parameters used by \code{lines()}
 to plot population trajectories.}
+
+\item{pch}{Plotting symbol(s); see \code{points}. If missing, the
+first point is a solid dot and subsequent points open circles.}
 
 \item{type}{character(1) Type of plot to create; default plots
 trajectories as points joined by lines.}
@@ -27,9 +32,11 @@ Plotting
 }
 \section{Functions}{
 \itemize{
-\item \code{plot_iterations}: Plot simulated changes in morph frequency.
+\item \code{plot_iterations}: Plot changes in morph frequency across
+generations. The starting population is represented by a solid
+dot.
 }}
 \examples{
-plot_iterations(iterate(isoplethy(50), 1000), pch=20)
+plot_iterations(iterate_stochastic(isoplethy(50), 1000), pch=20)
 }
 

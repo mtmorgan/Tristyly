@@ -58,19 +58,24 @@ Morph frequencies are summarized with `morph_frequency()`
 morph_frequency(isoplethy(30))
 ```
 
-## Iteration
+# Iteration
 
 Change in morph frequence can be followed in several ways.
 
-The `iterate()` function takes an initial population and iterates it
-until a specific number of generations has passed. `plot_iterations()`
-visualizes the result.
+The `iterate_*` functions take an initial population and iterate it
+until a specific stopping criterion is met. `plot_iterations()`
+visualizes the result; the starting population is represented by a
+solid dot.
 
 ```{r iterate}
-its <- iterate(isoplethy(50), 100)
-its
-tail(its)
-plot_iterations(its, pch=20)
+tbl <- iterate_stochastic(isoplethy(50), 100)
+tbl
+tail(tbl)
+plot_iterations(tbl)
+
+set.seed(1234L)
+tbl <- iterate_deterministic(isoplethy(3), , tolerance=1e-4)
+plot_iterations(tbl)
 ```
 
 The `replicate_to_dimorphism()` function iterates independent
