@@ -16,6 +16,12 @@ suppressPackageStartupMessages({
 })
 ```
 
+# TODO
+
+- test morph-specific fertility
+- perennial populations
+- self-fertilization
+
 # Methods
 
 ## Genetics and mating
@@ -65,7 +71,7 @@ until a specific stopping criterion is met. `plot_iterations()`
 visualizes the result; the starting population is represented by a
 solid dot.
 
-```{r iterate}
+```{r iterate, fig.asp=1}
 tbl <- iterate_stochastic(isoplethy(50), 100)
 tbl
 tail(tbl)

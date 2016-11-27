@@ -7,7 +7,7 @@ populations. Use [devtools][] to install, e.g.,
         install.packages("devtools", repos="https://cran.r-project.org")
     devtools::install_github("mtmorgan/Tristyly")
 
-See the [vignette][] for additional detaile
+See the [vignette][] for additional detail.
 
 [devtools]: https://cran.r-project.org/package=devtools
 [vignette]: https://github.com/mtmorgan/Tristyly/blob/master/vignettes/Tristyly.Rmd
